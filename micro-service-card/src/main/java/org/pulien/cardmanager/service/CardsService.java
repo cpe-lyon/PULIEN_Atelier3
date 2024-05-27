@@ -1,87 +1,125 @@
 package org.pulien.cardmanager.service;
 
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import org.apache.coyote.BadRequestException;
+import lombok.AllArgsConstructor;
 import org.pulien.cardmanager.entity.Card;
+import org.pulien.cardmanager.exception.CardFilterNotFoundException;
+import org.pulien.cardmanager.exception.CardNotFoundException;
+import org.pulien.cardmanager.exception.SavingCardException;
 import org.pulien.cardmanager.repository.card.CardsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
-@NoArgsConstructor
+@AllArgsConstructor
 public class CardsService {
     private final Random random = new Random();
+    private final CardsRepository cardsRepository;
 
-    @Autowired
-    private CardsRepository cardsRepository;
-
-    public ResponseEntity<List<Card>> getCards() {
-        return ResponseEntity.ok(cardsRepository.findAll());
-    }
 
     public List<Card> getAllCards() {
         return cardsRepository.findAll();
     }
 
-    public Optional<List<Card>> getAllByRatingRank(int min, int max) {
-        return cardsRepository.findAllByRatingBetween(min, max);
+    public void addCard(Card card) throws SavingCardException {
+        Card savedCard = cardsRepository.save(card);
+        if(savedCard == null){
+            throw new SavingCardException("Error while saving card.");
+        }
     }
 
-    public ResponseEntity<Card> getCardById(@NonNull @PathVariable Long id) {
+    public int getPriceById(Long cardId) throws CardNotFoundException {
+        Card card = getCardById(cardId);
 
+        if(card == null){
+            throw new CardNotFoundException("The given id doesn't correspond to any card");
+        }
+
+        return card.getPrice();
+    }
+
+    public Card getCardById(Long id) throws CardNotFoundException {
         Optional<Card> card = cardsRepository.findById(id);
-
-        return card.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        if(card.isEmpty()){
+            throw new CardNotFoundException("The given id doesn't correspond to any card.");
+        }
+        return card.get();
     }
 
-    public ResponseEntity<List<Card>> getCardFilteredByPrice(@PathVariable int mini, @PathVariable int max) {
+    public List<Card> getCardFilteredByPrice(int mini, int max) throws CardFilterNotFoundException {
         Optional<List<Card>> filteredCards = cardsRepository.findAllByPriceIsBetween(mini, max);
+        if (filteredCards.isEmpty()){
+            throw new CardFilterNotFoundException("Filter by price between {} and {} doesn't correspond to any cards.".formatted(mini,max));
+        }
 
-        return filteredCards.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return filteredCards.get();
     }
 
-    public ResponseEntity<List<Card>> getCardsCheaperThan(@PathVariable int max) {
+    public List<Card> getCardsCheaperThan(int max) throws CardFilterNotFoundException {
         Optional<List<Card>> filteredCards = cardsRepository.findAllByPriceIsLessThanEqual(max);
-
-        return filteredCards.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        if (filteredCards.isEmpty()){
+            throw new CardFilterNotFoundException("Filter by price cheaper than {} doesn't correspond to any cards.".formatted(max));
+        }
+        return filteredCards.get();
     }
 
-    public ResponseEntity<List<Card>> getCardsMoreExpensiveThan(@PathVariable int mini) {
+    public List<Card> getCardsMoreExpensiveThan(int mini) throws CardFilterNotFoundException {
         Optional<List<Card>> filteredCards = cardsRepository.findAllByPriceIsGreaterThanEqual(mini);
-
-        return filteredCards.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        if (filteredCards.isEmpty()){
+            throw new CardFilterNotFoundException("Filter by price expensive than {} doesn't correspond to any cards.".formatted(mini));
+        }
+        return filteredCards.get();
     }
 
 
-    public ResponseEntity<List<Card>> getCardFromName(@PathVariable String name) {
+    public List<Card> getCardFromName(String name) throws CardFilterNotFoundException {
         Optional<List<Card>> filteredCards = cardsRepository.findAllByName(name);
-
-        return filteredCards.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        if (filteredCards.isEmpty()){
+            throw new CardFilterNotFoundException("Filter by name with '{}' input doesn't correspond to any cards.".formatted(name));
+        }
+        return filteredCards.get();
     }
 
-    /**
-     * get random card pondéré par sa rareté
-     * @return Card
-     * @throws BadRequestException
-     */
-    public Card getRandomCard() throws BadRequestException {
+    public List<Card> getAllByRatingRank(int min, int max) throws CardFilterNotFoundException {
+        Optional<List<Card>> filteredCards = cardsRepository.findAllByRatingBetween(min, max);
+        if (filteredCards.isEmpty()){
+            throw new CardFilterNotFoundException("Filter by rate between {} and {} doesn't correspond to any cards.".formatted(min, max));
+        }
+        return filteredCards.get();
+    }
+
+    public Card getRandomCard() throws CardFilterNotFoundException {
         List<List<Card>> allTiers = new ArrayList<>();
 
-        List<Card> allCardsTier1 = getAllByRatingRank(0, 85)
-                .orElseThrow(() -> new BadRequestException("There is no card."));
+        List<Card> allCardsTier1;
+        List<Card> allCardsTier2;
+        List<Card> allCardsTier3;
 
-        List<Card> allCardsTier2 = getAllByRatingRank(86, 90).orElse(Collections.emptyList());
-        List<Card> allCardsTier3 = getAllByRatingRank(91, 99).orElse(Collections.emptyList());
+        try {
+            allCardsTier1 = getAllByRatingRank(0, 85);
+        }catch (CardFilterNotFoundException exception){
+            System.out.println("There is no tier 1");
+            allCardsTier1 = new ArrayList<>();
+        }
+
+        try {
+            allCardsTier2 = getAllByRatingRank(86, 90);
+        }catch (CardFilterNotFoundException exception){
+            System.out.println("There is no tier 2");
+            allCardsTier2 = new ArrayList<>();
+        }
+
+        try {
+            allCardsTier3 = getAllByRatingRank(91, 99);
+        }catch (CardFilterNotFoundException exception){
+            System.out.println("There is no tier 1");
+            allCardsTier3 = new ArrayList<>();
+        }
+
 
         allTiers.add(allCardsTier1);
-        if (!allCardsTier2.isEmpty()) allTiers.add(allCardsTier2);
-        if (!allCardsTier3.isEmpty()) allTiers.add(allCardsTier3);
+        allTiers.add(allCardsTier2);
+        allTiers.add(allCardsTier3);
 
         int tierDrew = random.nextInt(10);
         List<Card> tier;
@@ -97,13 +135,11 @@ public class CardsService {
         }
 
         if (tier.isEmpty()) {
-            throw new BadRequestException("There is no card.");
+            throw new CardFilterNotFoundException("There is no card.");
         }
 
         return tier.get(random.nextInt(tier.size()));
     }
 
-    public void register(Card card) {
-        cardsRepository.save(card);
-    }
+
 }

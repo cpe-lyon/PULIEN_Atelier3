@@ -13,12 +13,10 @@ import java.util.List;
 
 @Repository
 public interface CardInstancesRepository extends JpaRepository<CardInstance, Long> {
-    @Query("SELECT ci.card FROM CardInstance ci WHERE ci.user.userId = :userId")
-    List<Card> findCardsByUserId(@Param("userId") Long userId);
 
-    @Query("SELECT ci FROM CardInstance ci WHERE ci.user.login = :login")
-    List<CardInstance> findCardInstanceByUserLogin(String login);
+    @Query("SELECT ci FROM CardInstance ci WHERE ci.user_id = :user_id")
+    List<CardInstance> findCardsByUserId(Long user_id);
 
-    @Query("SELECT ci FROM CardInstance ci WHERE ci.isBuyable = true AND ci.user.login != :login" )
-    Page<CardInstance> findByBuyableIsTrue(Pageable pageable, String login);
+    @Query("SELECT ci FROM CardInstance ci WHERE ci.isBuyable = true AND ci.user_id != :user_id" )
+    Page<CardInstance> findByBuyableIsTrue(Pageable pageable, Long user_id);
 }
