@@ -1,7 +1,9 @@
 package org.pulien.cardmanager.controller;
 
 import lombok.AllArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.pulien.cardmanager.entity.Card;
+import org.pulien.cardmanager.exception.SavingCardException;
 import org.pulien.cardmanager.service.CardsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,7 +22,7 @@ public class AdminController {
     private final CardsService cardsService;
 
     @PostMapping(value = "/loadMockData")
-    public ResponseEntity<Boolean> loadData(){
+    public ResponseEntity<Boolean> loadData() throws BadRequestException {
         String cheminFichier = "C:\\Users\\clere\\Desktop\\Copie de FIFA23 - MAIN.csv";
 
         try (BufferedReader br = new BufferedReader(new FileReader(cheminFichier))) {
@@ -38,12 +40,14 @@ public class AdminController {
                         .price(Integer.valueOf(attributes[2])* 100000)
                         .build();
 
-                cardsService.register(card);
+                cardsService.addCard(card);
 
             }
 
         } catch (IOException e) {
             System.err.println("Erreur lors de la lecture du fichier : " + e.getMessage());
+        } catch (SavingCardException e) {
+            throw new BadRequestException(e);
         }
         return ResponseEntity.ok(true);
     }
