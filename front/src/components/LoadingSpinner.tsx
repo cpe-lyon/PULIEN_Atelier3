@@ -25,7 +25,8 @@ const loadingCircleVariants = {
 
 const loadingCircleTransition = {
   duration: 0.5,
-  yoyo: Infinity,
+  repeat: Infinity,
+  repeatType: "reverse",
   ease: "easeInOut",
 };
 
@@ -40,7 +41,7 @@ const LoadingSpinner: React.FC = () => {
       {[...Array(3)].map((_, index) => (
         <motion.span
           key={index}
-          className="block w-4 h-4 mx-1 bg-black rounded-full"
+          className="block w-4 h-4 mx-1 bg-white rounded-full"
           variants={loadingCircleVariants}
           transition={loadingCircleTransition}
         />

@@ -2,8 +2,9 @@ import {TableInventoryProperty} from "@/models/TableInventoryProperty.ts";
 import MarketService from "@/services/MarketService.ts";
 import ConfirmModal from "@/components/ConfirmModal.tsx";
 import {useState} from "react";
+import { PiCurrencyCircleDollarFill } from "react-icons/pi";
 
-const TableV2 = (properties: TableInventoryProperty) => {
+const TableList = (properties: TableInventoryProperty) => {
     const [wantsToSell, setWantsToSell] = useState(false);
     const [cardIdToSell, setCardIdToSell] = useState(0);
 
@@ -81,7 +82,7 @@ const TableV2 = (properties: TableInventoryProperty) => {
                         <td className="border px-3 py-2">{card.card?.price}</td>
                         <td className="border px-3 py-2">{card.card?.rating}</td>
                         <td className="border px-3 py-2">
-                            <button className="bg-black text-white px-4 py-2 rounded-md" onClick={() => sell(card.id)}>Sell</button>
+                            <button className="bg-red-600 text-white px-2 py-1 rounded flex flex-row justify-between gap-2" onClick={() => sell(card.id)}> <PiCurrencyCircleDollarFill size={24} color="white" /> Sell</button>
                         </td>
                     </tr>
                 ))}
@@ -91,4 +92,4 @@ const TableV2 = (properties: TableInventoryProperty) => {
     );
 };
 
-export default TableV2;
+export default TableList;
