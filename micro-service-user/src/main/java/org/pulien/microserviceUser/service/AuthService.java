@@ -1,9 +1,10 @@
-package org.pulien.cardmanager.service;
+package org.pulien.microserviceUser.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.apache.http.HttpException;
+import org.pulien.microserviceUser.exception.AuthServiceException;
 import org.springframework.stereotype.Service;
 
 import javax.security.auth.login.LoginException;
@@ -12,19 +13,19 @@ import java.util.Map;
 
 @Service
 @AllArgsConstructor
-public class UserService {
-    private final HttpService httpService;
+public class AuthService {
 
-    public boolean isValidPassword(String username, String password) throws LoginException {
+    private final HttpService httpService;
+    public String extractUserName(String token) throws AuthServiceException {
         Map<String,String> payload = new HashMap<>();
-        payload.put("username", username);
-        payload.put("password", password);
+        payload.put("token", token);
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return httpService.sendPostRequest("/users/isPasswordValid",objectMapper.writeValueAsString(payload)).equals("true");
+            return httpService.sendPostRequest("/auth/extractUsername",objectMapper.writeValueAsString(payload));
         } catch (JsonProcessingException | HttpException e) {
-            throw new LoginException("Error with user service interaction");
+            throw new AuthServiceException("Error with user service interaction");
         }
+
     }
 }

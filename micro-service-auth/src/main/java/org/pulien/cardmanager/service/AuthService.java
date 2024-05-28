@@ -31,4 +31,8 @@ public class AuthService {
             throw new LoginException("Login or password are wrong!");
         }
     }
+
+    public String extractUsername(String token) {
+        return jwtUtil.extractUsername(token);
+    }
 }

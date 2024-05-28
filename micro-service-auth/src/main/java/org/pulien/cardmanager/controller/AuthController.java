@@ -3,6 +3,7 @@ package org.pulien.cardmanager.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AllArgsConstructor;
 import org.pulien.cardmanager.request.CheckTokenRequest;
+import org.pulien.cardmanager.request.ExtractionUsernameRequest;
 import org.pulien.cardmanager.request.LoginRequest;
 import org.pulien.cardmanager.service.AuthService;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,11 @@ public class AuthController {
     @PostMapping("/checktoken")
     public ResponseEntity<Boolean> checkToken(@RequestBody CheckTokenRequest checkTokenRequest) {
         return ResponseEntity.ok(authService.checkToken(checkTokenRequest));
+    }
+
+    @PostMapping("/extractUsername")
+    public ResponseEntity<String> checkToken(@RequestBody ExtractionUsernameRequest extractionUsernameRequest) {
+        return ResponseEntity.ok(authService.extractUsername(extractionUsernameRequest.getToken()));
     }
 }
 
