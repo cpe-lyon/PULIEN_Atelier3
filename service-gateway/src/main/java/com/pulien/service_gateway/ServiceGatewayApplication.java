@@ -13,6 +13,7 @@ public class ServiceGatewayApplication {
 
 	@Bean
 	public RouteLocator customRouteLocator(RouteLocatorBuilder builder){
+
 		return builder.routes()
 				.route("auth-manager",r -> r.path("/auth-manager/**")
 				.filters(f -> f.stripPrefix(1))
