@@ -15,8 +15,6 @@
 	<description>Micro Service Card</description>
 	<properties>
 		<java.version>17</java.version>
-	</properties>
-	<properties>
   		<sonar.organization>pulien</sonar.organization>
   		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
