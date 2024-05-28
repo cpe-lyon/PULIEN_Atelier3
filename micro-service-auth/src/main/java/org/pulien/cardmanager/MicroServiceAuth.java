@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 
 
 @SpringBootApplication
-@EnableDiscoveryClient
+
 public class MicroServiceAuth {
 
 	public static void main(String[] args) {
