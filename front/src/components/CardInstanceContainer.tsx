@@ -1,4 +1,3 @@
-import React from 'react';
 import CardDetails from "@/components/cardDetails";
 
 const CardInstanceContainer = ({ cardInstanceBuyable, dialogToBuy }) => (

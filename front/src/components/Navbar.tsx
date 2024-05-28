@@ -2,7 +2,6 @@ import { Link, useNavigate } from "react-router-dom";
 import {NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLink,} from "./ui/navigation-menu"
 import authProvider from "@/services/AuthProvider";
 import {Avatar, AvatarImage} from "@/components/ui/avatar";
-import {useState} from "react";
 
 const Navbar = (({username,cash}) => {
     const navigate = useNavigate();

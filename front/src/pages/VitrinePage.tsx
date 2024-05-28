@@ -1,10 +1,8 @@
 import {useEffect, useState} from "react";
-import Navbar from "@/components/Navbar";
 import CardContainer from "@/components/CardContainer";
 import {useAtom} from "jotai";
 import {userCash, username} from "@/context/jotai.ts";
 import CardService from "@/services/CardService.ts";
-import UserService from "@/services/UserService.ts";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 const Vitrine = () => {
