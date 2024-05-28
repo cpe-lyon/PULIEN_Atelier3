@@ -17,7 +17,6 @@ import Navbar from './components/Navbar';
 function App() {
     const [usernameFromContext, setUsername] = useAtom(username);
     const [usercashFromContext, setUsercash] = useAtom(userCash);
-
     useEffect(() => {
         const getData = async () => {
             UserService.getUser().then(userData => {
@@ -35,11 +34,10 @@ function App() {
             </PrivateRoute>
         );
     };
-
     return (
         <div className='bg-slate-700 min-h-screen flex flex-col'>
             <Router>
-                {localStorage.getItem('auth') ? <Navbar username={usernameFromContext} cash={usercashFromContext} /> : null}
+                {usernameFromContext ? <Navbar username={usernameFromContext} cash={usercashFromContext} /> : <></>}
                 <div className="pt-16 flex-1"> 
                     <Routes>
                         <Route path="/authentified" element={<AlreadyConnected />} />

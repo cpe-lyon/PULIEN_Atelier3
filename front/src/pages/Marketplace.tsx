@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Navbar from "@/components/Navbar";
 import ModalDialog from "@/components/MarketPlaceDialog";
 import MarketService from "@/services/MarketService";
 import UserService from "@/services/UserService";

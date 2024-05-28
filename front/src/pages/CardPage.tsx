@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {fetchCards} from "../services/CardService.ts";
+import CardService from "../services/CardService.ts";
 import {Card} from "@/models/Card";
 import CardDetails from "@/components/cardDetails.tsx";
 import {username, userCash} from "@/context/jotai.ts";
@@ -16,7 +16,7 @@ const CardPage = () => {
     const [usercashFromContext, setUsercash] = useAtom(userCash);
 
     function getCards(){
-        return fetchCards();
+        return CardService.fetchCards();
     }
 
     useEffect(() => {
@@ -29,8 +29,7 @@ const CardPage = () => {
         setIsLoading(false));
     }, []);
 
-    return(
-        
+    return(       
     <div className="w-full h-max bg-slate-700  gap-4 card-page-container">
                 {isLoading && <div className="w-screen h-screen flex self-center justify-center"><LoadingSpinner /> </div>}
             {!isLoading &&

@@ -1,11 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
-import { NavigationMenu, NavigationMenuList, NavigationMenuLink } from "@radix-ui/react-navigation-menu";
+import { NavigationMenu, NavigationMenuLink } from "@radix-ui/react-navigation-menu";
 import { Avatar, AvatarImage } from '@radix-ui/react-avatar';
 import { IoIosLogOut } from 'react-icons/io';
 import { MdInventory } from 'react-icons/md';
 import { AiOutlineShoppingCart } from 'react-icons/ai';
 import { FaPeopleLine } from 'react-icons/fa6';
 import NavigationButton from './NavigationButton';  // Ensure the path is correct for your project
+import { useAtom } from "jotai";
+import { username as userLogin } from "@/context/jotai";
+import authProvider from "@/services/AuthProvider";
 
 interface NavbarProps {
     username: string;
@@ -14,10 +17,14 @@ interface NavbarProps {
 
 const Navbar = ({ username, cash }: NavbarProps) => {
     const navigate = useNavigate();
+    const [usernameFromContext, setUsernameFromContext] = useAtom(userLogin);
 
     const logout = () => {
-        localStorage.removeItem('auth');
+        authProvider.logout();
+        window.location.reload(false);
+        setUsernameFromContext("");
         navigate('/login');
+
     };
 
     return (
@@ -39,7 +46,7 @@ const Navbar = ({ username, cash }: NavbarProps) => {
             </div>
 
             <NavigationMenuLink className="navLinkHover">
-                    <Link onClick={logout} className="flex flex-row gap-1 mr-4 items-center text-white">
+                    <Link to="/login" onClick={logout} className="flex flex-row gap-1 mr-4 items-center text-white">
                         <IoIosLogOut color="white" size={24} /> Logout
                     </Link>
                 </NavigationMenuLink>
@@ -48,10 +55,3 @@ const Navbar = ({ username, cash }: NavbarProps) => {
 };
 
 export default Navbar;
-
-
-
-
-{/* 
-                
-                 */}

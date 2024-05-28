@@ -1,3 +1,5 @@
+
+
 interface AuthResquest {
     username : string,
     password : string
@@ -13,6 +15,7 @@ interface RegisterResquest {
 
 
 const authProvider = {
+    
     login: ({username, password}: AuthResquest ) =>  {
         const request = new Request('http://localhost:8080/auth/login', {
             method: 'POST',
@@ -36,6 +39,8 @@ const authProvider = {
     },
     logout: () =>  {
         localStorage.setItem('auth', '');
+
+        
     },
     register: ({firstname, lastname, login, email,password}: RegisterResquest ) =>  {
         const request = new Request('http://localhost:8080/auth/register', {

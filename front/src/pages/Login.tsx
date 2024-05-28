@@ -1,7 +1,6 @@
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -14,6 +13,8 @@ import {
 import { Input } from "@/components/ui/input"
 import authProvider from "@/services/AuthProvider"
 import { Link, Navigate, useNavigate } from "react-router-dom"
+import { useAtom } from "jotai"
+import { username } from "@/context/jotai"
 
 const formSchema = z.object({
     login: z.string().min(6,{
@@ -27,7 +28,9 @@ const formSchema = z.object({
 const loginForm = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const navigate = useNavigate();
+    const [usernameFromContext, setUsernameFromContext] = useAtom(username);
 
+    
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -39,7 +42,11 @@ const loginForm = () => {
         const login : string = values['login']
         const password : string = values['password']
 
-        await authProvider.login({username : login, password : password});
+        await authProvider.login({username : login, password : password}).then(()=>{
+            if(localStorage.getItem('auth')!=null){
+                setUsernameFromContext(username as unknown as string)
+            }
+        });
         navigate("/");
     }
 
@@ -49,13 +56,14 @@ const loginForm = () => {
 
     return !isConnected() ? (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 w-1/5 mx-auto mt-64">
-                <FormField
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 flex flex-col justify-center items-center  w-screen  mx-auto">
+              <div className="w-1/3 ">
+                  <FormField
                     control={form.control}
                     name="login"
                     render={({field}) => (
                         <FormItem>
-                            <FormLabel>Identifiant</FormLabel>
+                            <FormLabel className="text-white">Identifiant</FormLabel>
                             <FormControl>
                                 <Input placeholder="Identifiant" {...field}/>
                             </FormControl>
@@ -68,7 +76,7 @@ const loginForm = () => {
                     name="password"
                     render={({field}) => (
                         <FormItem>
-                            <FormLabel>Mot de passe</FormLabel>
+                            <FormLabel className="text-white">Mot de passe</FormLabel>
                             <FormControl>
                                 <Input placeholder="Mot de passe" type={"password"} {...field} />
                             </FormControl>
@@ -77,9 +85,10 @@ const loginForm = () => {
                     )}
                 />
                 <div>
-                    <Link to="/register">Créer un compte</Link>
+                    <Link to="/register" className="text-white">Créer un compte</Link>
                 </div>
                 <Button type="submit" className="w-full">Connexion</Button>
+                </div>
             </form>
         </Form>
     ) :  <Navigate to="/authentified" />
