@@ -15,8 +15,10 @@ public class ServiceGatewayApplication {
 	public RouteLocator customRouteLocator(RouteLocatorBuilder builder){
 		return builder.routes()
 				.route("auth-route", r -> r.path("/auth/**").uri("lb://auth-manager"))
-				.route("card-route", r -> r.path("/card/**").uri("lb://card-manager"))
-				.route("user-route", r -> r.path("/user/**").uri("lb://user-manager")).build();
+				.route("card-route", r -> r.path("/cards/**").uri("lb://card-manager"))
+				.route("user-route", r -> r.path("/users/**").uri("lb://user-manager"))
+				.route("orch-route", r -> r.path("/api/v1/**").uri("lb://orchestrator"))
+				.build();
 	}
 
 	public static void main(String[] args) {
