@@ -13,7 +13,10 @@ public class ServiceGatewayApplication {
 
 	@Bean
 	public RouteLocator customRouteLocator(RouteLocatorBuilder builder){
-		return builder.routes().route("auth-route", r -> r.path("/auth/**").uri("lb://auth-manager")).build();
+		return builder.routes()
+				.route("auth-route", r -> r.path("/auth/**").uri("lb://auth-manager"))
+				.route("card-route", r -> r.path("/card/**").uri("lb://card-manager"))
+				.route("user-route", r -> r.path("/user/**").uri("lb://user-manager")).build();
 	}
 
 	public static void main(String[] args) {

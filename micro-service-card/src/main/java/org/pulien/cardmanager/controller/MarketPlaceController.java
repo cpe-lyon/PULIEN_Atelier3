@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @AllArgsConstructor
-@RequestMapping("/api/v1/marketPlace")
+@RequestMapping("/marketPlace")
 public class MarketPlaceController {
     private final MarketPlaceService marketPlaceService;
 

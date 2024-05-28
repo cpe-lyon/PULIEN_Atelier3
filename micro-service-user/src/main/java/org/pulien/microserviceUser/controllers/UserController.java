@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(value = "/api/v1/user")
+@RequestMapping(value = "/users")
 public class UserController {
 
     private final UserService userService;

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/v1/cardsInstances")
+@RequestMapping("/cardsInstances")
 public class CardInstancesController {
     @Autowired
     private CardsInstanceService cardInstanceService;
