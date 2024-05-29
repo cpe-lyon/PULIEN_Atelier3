@@ -22,7 +22,7 @@ public class UserService {
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return httpService.sendPostRequest("/users/isPasswordValid",objectMapper.writeValueAsString(payload)).equals("true");
+            return httpService.sendPostRequest("/user/isPasswordValid",objectMapper.writeValueAsString(payload)).equals("true");
         } catch (JsonProcessingException | HttpException e) {
             throw new LoginException("Error with user service interaction");
         }

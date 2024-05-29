@@ -5,7 +5,7 @@ const token: string = `Bearer ${localStorage.getItem('auth')}`;
 
 export const fetchCards = async (): Promise<any> => {
 
-    const request = new Request('http://localhost:8765/api/v1/cardsInstances/currentuser', {
+    const request = new Request('http://localhost:10002/api/v1/cardsInstances/currentuser', {
         method: 'GET',
         mode: 'no-cors',
         headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': token }),
@@ -24,7 +24,7 @@ export const fetchCards = async (): Promise<any> => {
 }; // to use: const cards = await fetchCards()
 
 export const getCardDetails = async (id: number): Promise<Card | undefined> => {
-    const request = new Request('http://localhost:8765/api/v1/cardsInstances/{id}', {
+    const request = new Request('http://localhost:10002/api/v1/cardsInstances/{id}', {
         method: 'GET',
         mode: 'no-cors',
         headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': token }),
@@ -50,7 +50,7 @@ const CardService = {
             const bearerToken = 'Bearer '+ token;
 
 
-            const request = new Request('http://localhost:8765/api/v1/cards/get', {
+            const request = new Request('http://localhost:10002/api/v1/cards/get', {
                 method: 'GET',
                 mode: 'no-cors',
                 headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': bearerToken }),
