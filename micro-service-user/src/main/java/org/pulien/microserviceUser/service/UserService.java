@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.pulien.microserviceUser.entity.User;
 
 import org.pulien.microserviceUser.exception.RegistrationException;
+import org.pulien.microserviceUser.models.dtos.IsPassordValidRequest;
 import org.pulien.microserviceUser.models.dtos.UserDTO;
 import org.pulien.microserviceUser.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -55,5 +56,12 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return (List<User>) userRepository.findAll();
+    }
+
+    public Boolean isPasswordValid(IsPassordValidRequest request) {
+        User user = getByLogin(request.getUsername());
+
+
+        return encryptionService.checkPassword(request.getPassword(), user.getPassword());
     }
 }

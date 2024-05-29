@@ -17,7 +17,7 @@ public class ServiceGatewayApplication {
 				.route("auth-route", r -> r.path("/auth/**").uri("lb://auth-manager"))
 				.route("card-route", r -> r.path("/cards/**").uri("lb://card-manager"))
 				.route("user-route", r -> r.path("/users/**").uri("lb://user-manager"))
-				.route("orch-route", r -> r.path("/api/v1/**").uri("lb://orchestrator"))
+				.route("orch-route", r -> r.path("/orchestrator/**").uri("lb://orchestrator"))
 				.build();
 	}
 

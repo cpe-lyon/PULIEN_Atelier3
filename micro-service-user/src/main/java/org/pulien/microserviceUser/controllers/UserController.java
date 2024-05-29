@@ -3,8 +3,10 @@ package org.pulien.microserviceUser.controllers;
 import lombok.AllArgsConstructor;
 import org.pulien.microserviceUser.entity.User;
 import org.pulien.microserviceUser.exception.RegistrationException;
+import org.pulien.microserviceUser.models.dtos.IsPassordValidRequest;
 import org.pulien.microserviceUser.models.dtos.UserDTO;
 import org.pulien.microserviceUser.service.UserService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,5 +44,10 @@ public class UserController {
     @PostMapping(value = "/save")
     public ResponseEntity<User> saveNewUser(@RequestBody UserDTO userDTO) throws RegistrationException {
         return ResponseEntity.ok(userService.register(userDTO));
+    }
+
+    @PostMapping(value = "/isPasswordValid", consumes = MediaType.ALL_VALUE)
+    public ResponseEntity<Boolean> isPasswordValid(@RequestBody IsPassordValidRequest request) {
+        return ResponseEntity.ok(userService.isPasswordValid(request));
     }
 }
