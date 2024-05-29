@@ -9,7 +9,6 @@ const UserService = {
 
             const request = new Request('http://localhost:10001/user/current', {
                 method: 'POST',
-                mode: 'no-cors',
                 headers: new Headers({ 'Content-Type': 'application/json' }),
                 body : JSON.stringify({ "token" : bearerToken})
             });

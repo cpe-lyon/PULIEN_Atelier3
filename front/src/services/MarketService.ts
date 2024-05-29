@@ -7,9 +7,8 @@ const MarketService = {
             const bearerToken = 'Bearer '+ token;
 
 
-            const request = new Request('http://localhost:10002/api/v1/marketPlace', {
+            const request = new Request('http://localhost:10002/marketPlace', {
                 method: 'GET',
-                mode: 'no-cors',
                 headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': bearerToken }),
             });
 
@@ -36,11 +35,10 @@ const MarketService = {
 
             const token = localStorage.getItem('auth');
             const bearerToken = 'Bearer '+ token;
-            const url = 'http://localhost:10002/api/v1/marketPlace/buy/'+id
+            const url = 'http://localhost:10002/marketPlace/buy/'+id
 
             const request = new Request(url, {
                 method: 'POST',
-                mode: 'no-cors',
                 headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': bearerToken }),
             });
 
@@ -68,11 +66,10 @@ const MarketService = {
 
             const token = localStorage.getItem('auth');
             const bearerToken = 'Bearer '+ token;
-            const url = `http://localhost:10002/api/v1/marketPlace/sell/${id}`;
+            const url = `http://localhost:10002/marketPlace/sell/${id}`;
 
             const request = new Request(url, {
                 method: 'POST',
-                mode: 'no-cors',
                 headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': bearerToken }),
             });
 
