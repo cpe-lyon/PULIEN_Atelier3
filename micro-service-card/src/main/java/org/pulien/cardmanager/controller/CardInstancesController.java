@@ -21,12 +21,6 @@ public class CardInstancesController {
     private CardsInstanceService cardInstanceService;
 
 
-    @GetMapping
-    public ResponseEntity<List<CardInstance>> getCurrentUserCards(@RequestAttribute Long user_id) {
-        return ResponseEntity.ok(cardInstanceService.getCardsByUserId(user_id));
-    }
-
-
     @GetMapping("/{id}")
     public ResponseEntity<CardInstance> getCardInstanceById(@PathVariable Long id) throws CardInstanceNotFoundException {
         return ResponseEntity.ok(cardInstanceService.getCardInstanceById(id));

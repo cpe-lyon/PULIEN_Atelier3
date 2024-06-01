@@ -3,7 +3,9 @@ package org.pulien.microserviceUser.service;
 import lombok.AllArgsConstructor;
 import org.pulien.microserviceUser.entity.User;
 
+import org.pulien.microserviceUser.exception.AuthServiceException;
 import org.pulien.microserviceUser.exception.RegistrationException;
+import org.pulien.microserviceUser.exception.TokenException;
 import org.pulien.microserviceUser.models.dtos.IsPassordValidRequest;
 import org.pulien.microserviceUser.models.dtos.UserDTO;
 import org.pulien.microserviceUser.repository.UserRepository;
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class UserService {
     private final EncryptionService encryptionService;
     private final UserRepository userRepository;
+    private final AuthService authService;
 
     public User getByLogin(String login) {
         Optional<User> userOptional = userRepository.findByLogin(login);
@@ -63,5 +66,16 @@ public class UserService {
 
 
         return encryptionService.checkPassword(request.getPassword(), user.getPassword());
+    }
+
+    public User getUserByToken(String bearerToken) throws TokenException, AuthServiceException {
+        if(bearerToken.startsWith("Bearer ")){
+            String token = bearerToken.substring(7);
+            String username = authService.extractUserName(token);
+
+            return getByLogin(username);
+        }else {
+            throw new TokenException("The given token is uncorrect");
+        }
     }
 }

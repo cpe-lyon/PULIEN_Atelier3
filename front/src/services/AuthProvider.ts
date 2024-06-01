@@ -14,7 +14,7 @@ interface RegisterResquest {
 
 const authProvider = {
     login: ({username, password}: AuthResquest ) =>  {
-        const request = new Request('http://localhost:8080/auth/login', {
+        const request = new Request('http://localhost:10002/auth/login', {
             method: 'POST',
             body: JSON.stringify({ username, password }),
             headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -38,7 +38,7 @@ const authProvider = {
         localStorage.setItem('auth', '');
     },
     register: ({firstname, lastname, login, email,password}: RegisterResquest ) =>  {
-        const request = new Request('http://localhost:8080/auth/register', {
+        const request = new Request('http://localhost:10002/auth/register', {
             method: 'POST',
             body: JSON.stringify({firstname, lastname, login, email,password}),
             headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -62,7 +62,7 @@ const authProvider = {
             return false;
         }
 
-        const request = new Request('http://localhost:8080/auth/checktoken', {
+        const request = new Request('http://localhost:10002/auth/checktoken', {
             method: 'POST',
             body: JSON.stringify({ "token" : localStorage.getItem('auth') }),
             headers: new Headers({ 'Content-Type': 'application/json' }),

@@ -7,9 +7,10 @@ const UserService = {
             const bearerToken = 'Bearer '+ token;
 
 
-            const request = new Request('http://localhost:8080/api/v1/user/current', {
-                method: 'GET',
-                headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': bearerToken }),
+            const request = new Request('http://localhost:10001/user/current', {
+                method: 'POST',
+                headers: new Headers({ 'Content-Type': 'application/json' }),
+                body : JSON.stringify({ "token" : bearerToken})
             });
 
             return fetch(request)
@@ -34,7 +35,7 @@ const UserService = {
             const bearerToken = 'Bearer '+ token;
 
 
-            const request = new Request('http://localhost:8080/api/v1/user/current', {
+            const request = new Request('http://localhost:10001/user/current', {
                 method: 'GET',
                 headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': bearerToken }),
             });
