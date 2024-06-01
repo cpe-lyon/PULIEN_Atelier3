@@ -18,9 +18,9 @@ public class CardInstance {
     @Column(name = "user_id")
     private Long user_id;
 
-
-    @Column(name = "card_id")
-    private Long card_id;
+    @ManyToOne
+    @JoinColumn(name = "card_id")
+    private Card card;
 
     @Column(name = "is_buyable")
     private Boolean isBuyable;

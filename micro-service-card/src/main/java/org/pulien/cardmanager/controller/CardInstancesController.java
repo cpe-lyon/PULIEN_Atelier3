@@ -1,18 +1,18 @@
 package org.pulien.cardmanager.controller;
 
 import org.apache.coyote.BadRequestException;
-import org.pulien.cardmanager.entity.Card;
 import org.pulien.cardmanager.entity.CardInstance;
 import org.pulien.cardmanager.exception.CardInstanceNotFoundException;
 import org.pulien.cardmanager.exception.SavingCardInstanceException;
 import org.pulien.cardmanager.exception.UpdateCardInstanceException;
+import org.pulien.cardmanager.exception.UserNotFoundException;
 import org.pulien.cardmanager.service.CardsInstanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/cardsInstances")
@@ -20,12 +20,10 @@ public class CardInstancesController {
     @Autowired
     private CardsInstanceService cardInstanceService;
 
-
     @GetMapping
-    public ResponseEntity<List<CardInstance>> getCurrentUserCards(@RequestAttribute Long user_id) {
-        return ResponseEntity.ok(cardInstanceService.getCardsByUserId(user_id));
+    public ResponseEntity<List<CardInstance>> getCurrentUserCards(@RequestHeader("Authorization") String token) throws UserNotFoundException, BadRequestException {
+        return ResponseEntity.ok(cardInstanceService.getCardsByToken(token));
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<CardInstance> getCardInstanceById(@PathVariable Long id) throws CardInstanceNotFoundException {
@@ -39,7 +37,8 @@ public class CardInstancesController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<CardInstance>> getCardInstancesByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok(cardInstanceService.getCardsByUserId(userId));
+        return ResponseEntity.ok(new ArrayList<>());
+        //        return ResponseEntity.ok(cardInstanceService.getCardsByUserId(userId));
     }
 
     @PostMapping("/create")

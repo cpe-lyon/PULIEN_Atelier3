@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
-import Navbar from "@/components/Navbar";
 import ModalDialog from "@/components/MarketPlaceDialog";
 import MarketService from "@/services/MarketService";
 import UserService from "@/services/UserService";
 import MarketPlaceAlert from "@/components/MarketPlaceAlert";
 import CardInstanceContainer from "@/components/CardInstanceContainer";
 import {useAtom} from "jotai";
-import {userCash, username} from "@/context/jotai.ts";
+import {userCash} from "@/context/jotai.ts";
 import { CardInstance } from "@/models/CardInstance";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 const Marketplace = () => {
-    const [usernameFromContext, setUsername] = useAtom(username);
     const [usercashFromContext, setUsercash] = useAtom(userCash);
     const [cardInstanceBuyable, setCardInstanceBuyable] = useState([]);
     const [displayDialog, setDisplayDialog] = useState({
@@ -46,12 +44,18 @@ const Marketplace = () => {
         }
         console.log('achat de carte avec id', id);
 
-        const cardInstance : CardInstance | undefined = cardInstanceBuyable.find(i => i.id === id);
+        const cardInstance : CardInstance = cardInstanceBuyable.find(i => i.id === id);
 
-        let alertProps = {
+        let cardName: string = "";
+
+        if (cardInstance && cardInstance.card && cardInstance.card.name) {
+            cardName = cardInstance.card.name;
+        }
+
+        const alertProps = {
             display: true,
-            playerName : cardInstance.card.name,
-            owner : cardInstance.user.login,
+            playerName : cardName,
+            owner : cardInstance.user,
             success: success
         }
 
@@ -60,10 +64,12 @@ const Marketplace = () => {
             display: false,
             price: 0,
             solde: 1000,
-            total: -1
+            total: -1,
+            cardInstanceId: 0
         })
 
         const data = await getCardInstanceBuyable();
+        console.log(data);
         setCardInstanceBuyable(data);
     };
     const [isLoading,setIsLoading]=useState<boolean>(true)

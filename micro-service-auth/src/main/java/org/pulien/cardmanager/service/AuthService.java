@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.pulien.cardmanager.authentification.JwtUtil;
 import org.pulien.cardmanager.request.CheckTokenRequest;
 import org.pulien.cardmanager.request.LoginRequest;
+import org.pulien.cardmanager.request.UserDTO;
 import org.springframework.stereotype.Service;
 
 import javax.security.auth.login.LoginException;
@@ -27,12 +28,20 @@ public class AuthService {
     public String login(LoginRequest loginRequest) throws LoginException {
         if (userService.isValidPassword(loginRequest.getUsername(), loginRequest.getPassword())){
             return gerenateToken(loginRequest.getUsername());
-        }else {
+        } else {
             throw new LoginException("Login or password are wrong!");
         }
     }
 
+    public UserDTO register(UserDTO userDTO) {
+        return userService.register(userDTO);
+    }
+
     public String extractUsername(String token) {
         return jwtUtil.extractUsername(token);
+    }
+
+    public UserDTO extractUserIdFromToken(String userName) {
+        return userService.getUserIdFromUserName(userName);
     }
 }

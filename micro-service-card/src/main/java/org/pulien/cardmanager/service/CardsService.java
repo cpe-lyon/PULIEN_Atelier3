@@ -40,7 +40,8 @@ public class CardsService {
 
     public Card getCardById(Long id) throws CardNotFoundException {
         Optional<Card> card = cardsRepository.findById(id);
-        if(card.isEmpty()){
+
+        if (card.isEmpty()) {
             throw new CardNotFoundException("The given id doesn't correspond to any card.");
         }
         return card.get();

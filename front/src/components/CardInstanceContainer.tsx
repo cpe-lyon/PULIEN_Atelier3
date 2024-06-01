@@ -1,4 +1,3 @@
-import React from 'react';
 import CardDetails from "@/components/cardDetails";
 
 const CardInstanceContainer = ({ cardInstanceBuyable, dialogToBuy }) => (
@@ -12,7 +11,7 @@ const CardInstanceContainer = ({ cardInstanceBuyable, dialogToBuy }) => (
                 weight={ci.card.weight}
                 pace={ci.card.pace}
                 rate={ci.card.rating}
-                proprio={ci.user.login}
+                proprio={ci.user}
                 cardInstanceId={ci.id}
                 buyable={true}
                 onClickOnBuy={() => dialogToBuy(ci.id)}

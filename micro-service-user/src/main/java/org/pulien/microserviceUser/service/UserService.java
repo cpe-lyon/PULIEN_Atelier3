@@ -64,18 +64,13 @@ public class UserService {
     public Boolean isPasswordValid(IsPassordValidRequest request) {
         User user = getByLogin(request.getUsername());
 
-
         return encryptionService.checkPassword(request.getPassword(), user.getPassword());
     }
 
     public User getUserByToken(String bearerToken) throws TokenException, AuthServiceException {
-        if(bearerToken.startsWith("Bearer ")){
-            String token = bearerToken.substring(7);
-            String username = authService.extractUserName(token);
+        String token = bearerToken;
+        String username = authService.extractUserName(token);
 
-            return getByLogin(username);
-        }else {
-            throw new TokenException("The given token is uncorrect");
-        }
+        return getByLogin(username);
     }
 }
