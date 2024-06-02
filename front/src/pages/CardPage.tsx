@@ -2,9 +2,9 @@ import {useEffect, useState} from "react";
 import {fetchCards} from "../services/CardService.ts";
 import {Card} from "@/models/Card";
 import CardDetails from "@/components/cardDetails.tsx";
-import {username, userCash} from "@/context/jotai.ts";
-import { useAtom } from "jotai";
-import Navbar from "@/components/Navbar.tsx";
+// import {username, userCash} from "@/context/jotai.ts";
+// import { useAtom } from "jotai";
+// import Navbar from "@/components/Navbar.tsx";
 import '../styles/cardPage.css';
 import {CardInstance} from "@/models/CardInstance";
 import TableV2 from "@/components/TableV2.tsx";
@@ -14,8 +14,8 @@ const CardPage = () => {
     const [isLoading,setIsLoading]=useState<boolean>(true)
     const [cards, setCards] = useState<CardInstance[]>([{}]);
     const [cardToDisplay, setCardToDisplay] = useState<Card>({});
-    const [usernameFromContext, setUsername] = useAtom(username);
-    const [usercashFromContext, setUsercash] = useAtom(userCash);
+    // const [usernameFromContext, setUsername] = useAtom(username);
+    // const [usercashFromContext, setUsercash] = useAtom(userCash);
 
     function getCards(){
         return fetchCards();

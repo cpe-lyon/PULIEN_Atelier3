@@ -1,96 +1,100 @@
+import { CardInstance } from "@/models/CardInstance";
 
 const MarketService = {
-    getCardInstanceBuyable : async (): Promise<> => {
-        try {
+  getCardInstanceBuyable: async (): Promise<CardInstance> => {
+    try {
+      const token = localStorage.getItem("auth");
+      const bearerToken = "Bearer " + token;
 
-            const token = localStorage.getItem('auth');
-            const bearerToken = 'Bearer '+ token;
+      const request = new Request("http://localhost:8080/api/v1/marketPlace", {
+        method: "GET",
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Authorization: bearerToken,
+        }),
+      });
 
+      return fetch(request)
+        .then((response) => {
+          if (response.status < 200 || response.status >= 300) {
+            throw new Error(response.statusText);
+          }
+          return response.json();
+        })
+        .then((res) => {
+          return res;
+        })
+        .catch(() => {
+          throw new Error("Network error");
+        });
+    } catch (error) {
+      throw error;
+    }
+  },
 
-            const request = new Request('http://localhost:8080/api/v1/marketPlace', {
-                method: 'GET',
-                headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': bearerToken }),
-            });
+  buyCardInstanceBuyable: async (id: number): Promise<any> => {
+    try {
+      const token = localStorage.getItem("auth");
+      const bearerToken = "Bearer " + token;
+      const url = "http://localhost:8080/api/v1/marketPlace/buy/" + id;
 
-            return fetch(request)
-                .then(response => {
-                    if (response.status < 200 || response.status >= 300) {
-                        throw new Error(response.statusText);
-                    }
-                    return response.json()
-                })
-                .then(res => {
-                    return res
-                })
-                .catch(() => {
-                    throw new Error('Network error')
-                });
-        } catch (error) {
-            throw error;
-        }
-    },
+      const request = new Request(url, {
+        method: "POST",
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Authorization: bearerToken,
+        }),
+      });
 
-    buyCardInstanceBuyable : async (id: number): Promise<any> => {
-        try {
+      return fetch(request)
+        .then((response) => {
+          if (response.status < 200 || response.status >= 300) {
+            throw new Error(response.statusText);
+          }
+          return response.json();
+        })
+        .then((res) => {
+          return res;
+        })
+        .catch(() => {
+          throw new Error("Network error");
+        });
+    } catch (error) {
+      throw error;
+    }
+  },
 
-            const token = localStorage.getItem('auth');
-            const bearerToken = 'Bearer '+ token;
-            const url = 'http://localhost:8080/api/v1/marketPlace/buy/'+id
+  sellCardInstance: async (id: number): Promise<any> => {
+    try {
+      const token = localStorage.getItem("auth");
+      const bearerToken = "Bearer " + token;
+      const url = `http://localhost:8080/api/v1/marketPlace/sell/${id}`;
 
-            const request = new Request(url, {
-                method: 'POST',
-                headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': bearerToken }),
-            });
+      const request = new Request(url, {
+        method: "POST",
+        headers: new Headers({
+          "Content-Type": "application/json",
+          Authorization: bearerToken,
+        }),
+      });
 
-            return fetch(request)
-                .then(response => {
-                    if (response.status < 200 || response.status >= 300) {
-                        throw new Error(response.statusText);
-                    }
-                    return response.json()
-                })
-                .then(res => {
-                    return res
-                })
-                .catch(() => {
-                    throw new Error('Network error')
-                });
-        } catch (error) {
-            throw error;
-        }
-    },
-
-    sellCardInstance : async (id: number): Promise<any> => {
-
-        try {
-
-            const token = localStorage.getItem('auth');
-            const bearerToken = 'Bearer '+ token;
-            const url = `http://localhost:8080/api/v1/marketPlace/sell/${id}`;
-
-            const request = new Request(url, {
-                method: 'POST',
-                headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': bearerToken }),
-            });
-
-            return fetch(request)
-                .then(response => {
-                    if (response.status < 200 || response.status >= 300) {
-                        throw new Error(response.statusText);
-                    }
-                    return response.json()
-                })
-                .then(res => {
-                    return res
-                })
-                .catch(() => {
-                    throw new Error('Network error')
-                });
-        } catch (error) {
-            throw error;
-        }
-    },
-}
-
+      return fetch(request)
+        .then((response) => {
+          if (response.status < 200 || response.status >= 300) {
+            throw new Error(response.statusText);
+          }
+          return response.json();
+        })
+        .then((res) => {
+          return res;
+        })
+        .catch(() => {
+          throw new Error("Network error");
+        });
+    } catch (error) {
+      throw error;
+    }
+  },
+};
 
 export default MarketService;

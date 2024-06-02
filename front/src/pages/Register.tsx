@@ -1,7 +1,6 @@
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -39,9 +38,9 @@ const Register = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            name: "",
-        },
+        // defaultValues: {
+        //     name: "",
+        // },
     })
 
     async function onSubmit(values: z.infer<typeof formSchema>) {

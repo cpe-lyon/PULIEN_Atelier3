@@ -1,5 +1,5 @@
 
-const MarketModalDialog = ({ displayDialog, setDisplayDialog, buyCardInstanceBuyable }) => (
+const MarketModalDialog = ({ displayDialog, setDisplayDialog, buyCardInstanceBuyable }:any) => (
     displayDialog.display && (
         <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
             <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>

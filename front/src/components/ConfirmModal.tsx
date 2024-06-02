@@ -1,5 +1,5 @@
 
-const ConfirmModal = ({isOpen, title, message, onConfirm, onCancel}) => {
+const ConfirmModal = ({isOpen, title, message, onConfirm, onCancel}:any) => {
     if (!isOpen) return null;
 
     return (

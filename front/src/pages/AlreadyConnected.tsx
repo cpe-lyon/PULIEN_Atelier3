@@ -1,11 +1,15 @@
 import { Button } from "@/components/ui/button";
+import { username } from "@/context/jotai";
+import { useAtom } from "jotai";
 import { Link, useNavigate } from "react-router-dom";
 
 const AlreadyConnected = () => {
     const navigate = useNavigate();
+    const [_, setUsernameFromContext] = useAtom(username)
 
     function logout() {
         localStorage.setItem('auth', '');
+        setUsernameFromContext('');
         navigate("/card");
     }
 

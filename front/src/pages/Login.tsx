@@ -1,7 +1,6 @@
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -14,6 +13,8 @@ import {
 import { Input } from "@/components/ui/input"
 import authProvider from "@/services/AuthProvider"
 import { Link, Navigate, useNavigate } from "react-router-dom"
+import { useAtom } from "jotai"
+import { username } from "@/context/jotai"
 
 const formSchema = z.object({
     login: z.string().min(6,{
@@ -24,22 +25,26 @@ const formSchema = z.object({
     }),
 })
 
-const loginForm = () => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
+const loginForm = () => {4
+    const [_,setUsernameFromContext] = useAtom(username);
+
     const navigate = useNavigate();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            name: "",
-        },
+        // defaultValues: {
+        //     name: "",
+        // },
     })
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const login : string = values['login']
         const password : string = values['password']
 
-        await authProvider.login({username : login, password : password});
+        await authProvider.login({username : login, password : password}).then((username) => {
+            setUsernameFromContext(login);
+        });
+
         navigate("/");
     }
 

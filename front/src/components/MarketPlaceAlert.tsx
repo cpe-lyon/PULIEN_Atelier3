@@ -1,4 +1,4 @@
-const MarketPlaceAlert = ({ alertProps }) => {
+const MarketPlaceAlert = ({ alertProps }:any) => {
     const { display, success, playerName, owner } = alertProps;
 
     if (!display) {

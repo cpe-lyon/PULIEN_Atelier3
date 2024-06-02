@@ -1,19 +1,17 @@
 import { useEffect, useState } from "react";
-import Navbar from "@/components/Navbar";
 import ModalDialog from "@/components/MarketPlaceDialog";
 import MarketService from "@/services/MarketService";
 import UserService from "@/services/UserService";
 import MarketPlaceAlert from "@/components/MarketPlaceAlert";
 import CardInstanceContainer from "@/components/CardInstanceContainer";
 import {useAtom} from "jotai";
-import {userCash, username} from "@/context/jotai.ts";
+import {userCash} from "@/context/jotai.ts";
 import { CardInstance } from "@/models/CardInstance";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 const Marketplace = () => {
-    const [usernameFromContext, setUsername] = useAtom(username);
-    const [usercashFromContext, setUsercash] = useAtom(userCash);
-    const [cardInstanceBuyable, setCardInstanceBuyable] = useState([]);
+    const [_, setUsercash] = useAtom(userCash);
+    const [cardInstanceBuyable, setCardInstanceBuyable] = useState<CardInstance[]>([]);
     const [displayDialog, setDisplayDialog] = useState({
         display: false,
         price: 0,
@@ -29,8 +27,8 @@ const Marketplace = () => {
     })
 
     const getCardInstanceBuyable = async () => {
-        const response = await MarketService.getCardInstanceBuyable();
-        return response.content;
+        const response:CardInstance = await MarketService.getCardInstanceBuyable();
+        return response;
     };
 
     const buyCardInstanceBuyable = async (id: number) => {
@@ -50,8 +48,8 @@ const Marketplace = () => {
 
         let alertProps = {
             display: true,
-            playerName : cardInstance.card.name,
-            owner : cardInstance.user.login,
+            playerName : cardInstance!.card!.name as unknown as string,
+            owner : cardInstance!.user.login,
             success: success
         }
 
@@ -60,25 +58,29 @@ const Marketplace = () => {
             display: false,
             price: 0,
             solde: 1000,
-            total: -1
+            total: -1,
+            cardInstanceId:1
         })
 
         const data = await getCardInstanceBuyable();
-        setCardInstanceBuyable(data);
+        setCardInstanceBuyable([data]);
     };
     const [isLoading,setIsLoading]=useState<boolean>(true)
 
-    const dialogToBuy = async (id) => {
+    const dialogToBuy = async (id:any) => {
         const cardInstance = cardInstanceBuyable.find(i => i.id === id);
+        console.log("ID OF THE CARD TO BUY " + id);
+        console.log("ID OF THE CARD FINDED  " + cardInstance?.id);
+        
         if (!cardInstance) return;
         
-        const price = cardInstance.card.price;
+        const price = cardInstance!.card!.price;
         const solde = await UserService.getUserCash();
-        const total = solde - price;
+        const total = solde - price!;
 
         setDisplayDialog({
             display: true,
-            price: price,
+            price: price!,
             solde: solde,
             total: total,
             cardInstanceId: id
@@ -88,7 +90,7 @@ const Marketplace = () => {
     useEffect(() => {
         const getData = async () => {
             const data = await getCardInstanceBuyable();
-            setCardInstanceBuyable(data);
+            setCardInstanceBuyable([data]);
 
         };
         getData().then(()=>

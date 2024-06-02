@@ -41,7 +41,7 @@ function App() {
 
   return (
     <Router>
-       {localStorage.getItem('auth') ?  
+       {usernameFromContext ?  
        <Navbar username={usernameFromContext} cash={usercashFromContext}/> 
        : <></>}
       <Routes>
