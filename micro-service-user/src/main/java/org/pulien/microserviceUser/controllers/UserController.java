@@ -47,4 +47,19 @@ public class UserController {
     public ResponseEntity<Boolean> isPasswordValid(@RequestBody IsPassordValidRequest request) {
         return ResponseEntity.ok(userService.isPasswordValid(request));
     }
+
+    // TODO convert to PUTMAPPING
+    @GetMapping(value = "/credit/{userToUpdateId}/{amount}")
+    public ResponseEntity<User> creditUser(@PathVariable int amount, @PathVariable Long userToUpdateId) {
+        Optional<User> user = Optional.of(userService.credit(amount, userToUpdateId));
+
+        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping(value = "/debit/{userToUpdateId}/{amount}")
+    public ResponseEntity<User> debitUser(@PathVariable int amount, @PathVariable Long userToUpdateId) {
+        Optional<User> user = Optional.of(userService.debit(amount, userToUpdateId));
+
+        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }

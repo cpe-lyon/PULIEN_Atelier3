@@ -15,26 +15,23 @@ interface RegisterResquest {
 
 
 const authProvider = {
-    login: ({username, password}: AuthResquest ) =>  {
+    login: async ({username, password}: AuthResquest) => {
         const request = new Request(`http://localhost:${MS_AUTH_PORT}/auth/login`, {
             method: 'POST',
-            body: JSON.stringify({ username, password }),
-            headers: new Headers({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify({username, password}),
+            headers: new Headers({'Content-Type': 'application/json'}),
         });
-        return fetch(request)
-            .then(response => {
-                if (response.status < 200 || response.status >= 300) {
-                    throw new Error(response.statusText);
-                }
-                return response.text();
-            })
-            .then(token => {
-                localStorage.setItem('auth', token);
-                
-            })
-            .catch(() => {
-                throw new Error('Network error')
-            });
+        try {
+            const response = await fetch(request);
+            if (response.status < 200 || response.status >= 300) {
+                throw new Error(response.statusText);
+            }
+            const token = await response.text();
+            localStorage.setItem('auth', token);
+            return token;
+        } catch {
+            throw new Error('Network error');
+        }
     },
     logout: () =>  {
         localStorage.setItem('auth', '');

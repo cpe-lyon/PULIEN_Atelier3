@@ -3,13 +3,11 @@ package org.pulien.cardmanager.feign;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
-import org.apache.catalina.User;
 import org.apache.coyote.BadRequestException;
 import org.apache.http.HttpException;
 import org.pulien.cardmanager.entity.UserDTO;
 import org.pulien.cardmanager.service.HttpService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +25,24 @@ public class UserFeignClientImpl implements UserFeignClient {
             UserDTO userDTO = objectMapper.readValue(response, UserDTO.class);
             return userDTO.getUserId();
         } catch (JsonProcessingException | HttpException e) {
+            throw new BadRequestException("Error with user service interaction");
+        }
+    }
+
+    @Override
+    public void creditUser(int amount, Long userToUpdateId) throws BadRequestException {
+        try {
+            httpService.sendGetRequest("/user/credit/" + userToUpdateId + "/" + amount);
+        } catch (HttpException e) {
+            throw new BadRequestException("Error with user service interaction");
+        }
+    }
+
+    @Override
+    public void debitUser(int amount, Long userToUpdateId) throws BadRequestException {
+        try {
+            httpService.sendGetRequest("/user/debit/" + userToUpdateId + "/" + amount);
+        } catch (HttpException e) {
             throw new BadRequestException("Error with user service interaction");
         }
     }

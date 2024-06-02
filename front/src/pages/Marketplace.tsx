@@ -34,12 +34,12 @@ const Marketplace = () => {
     const buyCardInstanceBuyable = async (id: number) => {
 
         let success;
-        try{
+        try {
             await MarketService.buyCardInstanceBuyable(id);
             success = true;
-            let solde = await UserService.getUserCash();
+            const solde = await UserService.getUserCash();
             setUsercash(solde);
-        }catch (e) {
+        } catch (e) {
             success = false;
         }
         console.log('achat de carte avec id', id);

@@ -6,6 +6,7 @@ import org.pulien.cardmanager.entity.CardInstance;
 import org.pulien.cardmanager.entity.ExtractionUsernameRequest;
 import org.pulien.cardmanager.exception.*;
 import org.pulien.cardmanager.feign.AuthFeignClient;
+import org.pulien.cardmanager.feign.UserFeignClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class MarketPlaceService{
 
     private CardsInstanceService cardsInstanceService;
     private final AuthFeignClient authFeignClient;
+    private final UserFeignClient userFeignClient;
 
 
     public boolean isCardInstancePurchasableByUserId(Long user_id, Long cardInstanceId) throws MarketPlaceException {
@@ -37,17 +39,22 @@ public class MarketPlaceService{
             throw new AuthorizationException("Not authorized to buy this card !");
         }
 
-us
-    return affectCardInstance(cardInstanceId, userId);
+        return affectCardInstance(cardInstanceId, userId);
     }
 
-    public CardInstance affectCardInstance(Long cardInstanceId, Long user_id) throws UpdateCardInstanceException, CardInstanceNotFoundException {
+    public CardInstance affectCardInstance(Long cardInstanceId, Long user_id) throws UpdateCardInstanceException, CardInstanceNotFoundException, BadRequestException {
         CardInstance cardInstance = getById(cardInstanceId);
+
+        Long sellerId = cardInstance.getUser_id();
+
         cardInstance.setUser_id(user_id);
+        cardInstance.setIsBuyable(false);
 
-        CardInstance savedCardInstance = cardsInstanceService.updateCardInstance(cardInstanceId, cardInstance);
 
-        return savedCardInstance;
+        this.userFeignClient.creditUser(cardInstance.getCard().getPrice(), sellerId);
+        this.userFeignClient.debitUser(cardInstance.getCard().getPrice(), user_id);
+
+        return cardsInstanceService.updateCardInstance(cardInstanceId, cardInstance);
     }
 
     public Page<CardInstance> getMarketplace(Pageable pageable, String token) throws BadRequestException {

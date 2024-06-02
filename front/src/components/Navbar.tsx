@@ -3,9 +3,12 @@ import {NavigationMenu, NavigationMenuList, NavigationMenuItem, NavigationMenuLi
 import authProvider from "@/services/AuthProvider";
 import {Avatar, AvatarImage} from "@/components/ui/avatar";
 import {useState} from "react";
+import {useAtom} from "jotai";
+import {userCash} from "@/context/jotai.ts";
 
 const Navbar = (({username,cash}) => {
     const navigate = useNavigate();
+    const [cashCtx, setCashCtx] = useAtom(userCash);
 
     function logout() {
         authProvider.logout();
@@ -22,7 +25,7 @@ const Navbar = (({username,cash}) => {
                         </Avatar>
                     </a>
                     <p className="ml-2">
-                        {username} : {cash} $
+                        {username} : {cashCtx} $
                     </p>
                 </NavigationMenuLink>
                 <NavigationMenuList className="space-x-12">

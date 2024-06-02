@@ -73,4 +73,25 @@ public class UserService {
 
         return getByLogin(username);
     }
+
+    public User credit(int amount, Long userToUpdateId) {
+        return (updateCash(amount, userToUpdateId));
+    }
+
+    public User debit(int amount, Long userToUpdateId) {
+        return (updateCash(-1 * amount, userToUpdateId));
+    }
+
+    public User updateCash(int amount, Long userToUpdateId) {
+        Optional<User> user = userRepository.findById(userToUpdateId);
+
+        if (user.isEmpty())
+            return null;
+
+        User userToUpdate = user.get();
+
+        userToUpdate.setCash(userToUpdate.getCash() + amount);
+
+        return userRepository.save(userToUpdate);
+    }
 }

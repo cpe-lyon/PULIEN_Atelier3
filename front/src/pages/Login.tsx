@@ -14,6 +14,9 @@ import {
 import { Input } from "@/components/ui/input"
 import authProvider from "@/services/AuthProvider"
 import { Link, Navigate, useNavigate } from "react-router-dom"
+import {useAtom} from "jotai";
+import {token as contextToken, userCash} from "@/context/jotai.ts";
+import UserService from "@/services/UserService.ts";
 
 const formSchema = z.object({
     login: z.string().min(6,{
@@ -24,9 +27,11 @@ const formSchema = z.object({
     }),
 })
 
-const loginForm = () => {
+const LoginForm = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const navigate = useNavigate();
+    const [token, setToken] = useAtom(contextToken);
+    const [cash, setCash] = useAtom(userCash);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -39,7 +44,14 @@ const loginForm = () => {
         const login : string = values['login']
         const password : string = values['password']
 
-        await authProvider.login({username : login, password : password});
+        const response = await authProvider.login({username : login, password : password});
+
+        response ? setToken(response) : console.error("ERROR WHILE STORING TOKEN IN CONTEXT");
+
+        const cashResponse = await UserService.getUserCash();
+
+        cashResponse ? setCash(cashResponse) : console.error("ERROR WHILE GETTING USER CASH");
+
         navigate("/");
     }
 
@@ -85,4 +97,4 @@ const loginForm = () => {
     ) :  <Navigate to="/authentified" />
 }
 
-export default loginForm;
+export default LoginForm;
